@@ -1,128 +1,225 @@
-# Online Course Database SQL
+![Online Course System — SQL Project Banner](images/exercise-2-banner.png)
 
-A small Microsoft SQL Server / T-SQL learning project based on the original **Exercise 2.sql** file. It creates and populates an online-course database, then demonstrates filtering, sorting, aggregate functions, grouping, `HAVING`, and nested subqueries.
+# Online Course System — SQL Server Project
 
-> **Database engine:** Microsoft SQL Server. The scripts intentionally use T-SQL features such as `GO`, `USE`, `DB_ID`, and `TOP`; they are not SQLite scripts.
+A beginner-friendly SQL Server project that builds a simple online course database, inserts sample student and enrollment records, and uses SQL queries to explore student performance and course enrollment data.
 
-## Purpose
+## Project Overview
 
-The database models students and their course enrollments. It is designed for SQL fundamentals practice rather than production course-management software. The original learning objectives and sample records are preserved while the SQL is split into readable, executable sections.
+This project demonstrates how to create and query a relational database using **Microsoft SQL Server and T-SQL**. It models students and their course enrollments, including student information, course names, grades, fees, and semesters.
 
-## Project structure
+The exercise covers database creation, table relationships, sample data insertion, filtering, sorting, aggregate calculations, grouping, and subqueries.
 
-```text
-.
-├── README.md
-├── .gitignore
-├── docs/
-│   └── screenshot-placeholder.md
-└── sql/
-    ├── 01_setup.sql
-    └── 02_queries.sql
-```
+## Database Structure
 
-## Tables and relationships
+The database is named `Online_Course` and contains two related tables.
 
-### `dbo.Students`
+| Table | Description |
+|---|---|
+| `Students` | Stores student information, including names, age, city, and GPA. |
+| `Enrollments` | Stores course enrollment records, including student ID, course name, grade, fee, and semester. |
 
-Stores one row per learner:
+### Students Table
 
-- `StudentID` — primary key.
-- `FirstName`, `LastName` — required names.
-- `Age` — optional age with a basic range check.
-- `City` — optional city.
-- `GPA` — optional GPA constrained to `0.00`–`4.00`.
+| Column | Data Type | Description |
+|---|---|---|
+| `StudentID` | `INT` | Primary key identifying each student |
+| `FirstName` | `VARCHAR(30)` | Student's first name; required |
+| `LastName` | `VARCHAR(30)` | Student's last name; required |
+| `Age` | `INT` | Student's age |
+| `City` | `VARCHAR(30)` | Student's city |
+| `GPA` | `DECIMAL(3,2)` | Student's grade point average |
 
-### `dbo.Enrollments`
+### Enrollments Table
 
-Stores one row per course enrollment:
+| Column | Data Type | Description |
+|---|---|---|
+| `EnrollmentID` | `INT` | Primary key identifying each enrollment |
+| `StudentID` | `INT` | Foreign key referencing `Students.StudentID` |
+| `CourseName` | `VARCHAR(50)` | Course name; required |
+| `Grade` | `INT` | Grade earned in the course |
+| `Fee` | `DECIMAL(8,2)` | Course fee |
+| `Semester` | `VARCHAR(20)` | Semester associated with the enrollment |
 
-- `EnrollmentID` — primary key.
-- `StudentID` — foreign key to `dbo.Students(StudentID)`.
-- `CourseName` — course label such as `Database`, `Programming`, or `AI`.
-- `Grade` — optional numeric grade constrained to `0`–`100`.
-- `Fee` — optional non-negative course fee.
-- `Semester` — semester label such as `Fall` or `Spring`.
+### Database Relationship
 
-The relationship is **one-to-many**: one student can have many enrollment records, while each enrollment belongs to one student.
+The `StudentID` column in `Enrollments` references the `StudentID` primary key in `Students`, connecting enrollment records to the students they belong to.
 
-## Setup and execution
+![Online Course System Database Workflow](images/exercise-2-workflow.png)
 
-1. Install or connect to a Microsoft SQL Server instance. SQL Server Express, Developer Edition, or a hosted SQL Server instance can be used.
-2. Open `sql/01_setup.sql` in SQL Server Management Studio, Azure Data Studio, or run it with `sqlcmd`.
-3. Execute the setup script once against an account that can create a database. It creates `Online_Course`, the two tables, constraints, and the sample data.
-4. Open `sql/02_queries.sql` and execute it after the setup script completes.
+## Project Contents
 
-Example `sqlcmd` commands:
+The project includes SQL statements for:
 
-```powershell
-sqlcmd -S <server-name> -E -i .\sql\01_setup.sql
-sqlcmd -S <server-name> -E -d Online_Course -i .\sql\02_queries.sql
-```
+- Creating the `Online_Course` database.
+- Creating the `Students` and `Enrollments` tables.
+- Defining primary and foreign key constraints.
+- Inserting sample student and enrollment data.
+- Retrieving student records using filtering conditions.
+- Analyzing student GPAs and course grades.
+- Grouping enrollment records and filtering aggregated results.
+- Using subqueries to compare individual values with calculated averages.
 
-For SQL authentication, replace `-E` with the appropriate `-U` and `-P` options. Do not commit credentials to this repository.
+## SQL Concepts Demonstrated
 
-### Rerun note
+### 1. Database and Table Creation
+- `CREATE DATABASE`
+- `USE`
+- `CREATE TABLE`
+- Primary keys and foreign keys
+- Data types and `NOT NULL` constraints
+- `GO` batch separators
 
-`01_setup.sql` creates the database only when it does not exist, but it does not drop existing tables or protect the sample `INSERT` statements from duplicate-key errors. Run it against a fresh database, or remove/reset the existing sample objects before rerunning. No destructive `DROP DATABASE` operation is included.
+### 2. Filtering and Sorting
+- `WHERE`
+- Comparison operators
+- `AND` and `OR`
+- `DISTINCT`
+- `ORDER BY`
+- `TOP`
 
-## SQL concepts demonstrated
+### 3. Aggregate Functions
+- `AVG()`
+- `MAX()`
+- `MIN()`
+- `COUNT()`
 
-The source exercise demonstrates and the cleaned scripts retain:
+### 4. Grouping and Aggregate Filtering
+- `GROUP BY`
+- `HAVING`
 
-- Database creation and database selection with `CREATE DATABASE` and `USE`.
-- Table creation with typed columns and constraints.
-- Primary keys and a foreign-key relationship.
-- `INSERT` with explicit column lists.
-- Filtering with `WHERE`, comparison operators, `AND`, `OR`/`IN`, and `IS`-compatible nullable columns.
-- Sorting with `ORDER BY` and limiting rows with SQL Server `TOP`.
-- Duplicate removal with `DISTINCT`.
-- Aggregate functions: `AVG`, `MAX`, `MIN`, and `COUNT`.
-- Grouping with `GROUP BY` and post-aggregation filtering with `HAVING`.
-- Scalar and nested subqueries.
-- Aliases and explicit schema qualification through `dbo`.
-- Basic data-integrity checks for GPA, age, grade, and fee values.
+### 5. Subqueries
+- Scalar subqueries with aggregate functions
+- Filtering records using calculated averages
+- `IN` with a subquery
 
-## Example queries from the source exercise
+![SQL Concepts Demonstrated](images/exercise-2-concepts.png)
 
-### Students above a GPA threshold
+## Example Queries
+
+### 1. Retrieve Students with a GPA Greater Than 3.00
 
 ```sql
 SELECT FirstName, LastName, Age, GPA
-FROM dbo.Students
+FROM Students
 WHERE GPA > 3.00;
 ```
 
-### Average grade by course
+### 2. Find the Average, Highest, and Lowest GPA
+
+```sql
+SELECT
+    AVG(GPA) AS [Average GPA],
+    MAX(GPA) AS [Highest GPA],
+    MIN(GPA) AS [Lowest GPA]
+FROM Students;
+```
+
+### 3. Calculate the Average Grade for Each Course
 
 ```sql
 SELECT
     CourseName,
-    AVG(CAST(Grade AS DECIMAL(5, 2))) AS [Average Grade]
-FROM dbo.Enrollments
+    AVG(Grade) AS AverageGrade
+FROM Enrollments
 GROUP BY CourseName;
 ```
 
-### Students above the overall average age
+### 4. Find Courses with More Than Three Enrollments
+
+```sql
+SELECT
+    CourseName,
+    COUNT(EnrollmentID) AS [Number of Enrollments]
+FROM Enrollments
+GROUP BY CourseName
+HAVING COUNT(EnrollmentID) > 3;
+```
+
+### 5. Find Students Older Than the Average Student Age
 
 ```sql
 SELECT FirstName, LastName
-FROM dbo.Students
-WHERE Age >
-(
+FROM Students
+WHERE Age > (
     SELECT AVG(Age)
-    FROM dbo.Students
+    FROM Students
 );
 ```
 
-The complete set of ten source queries is in `sql/02_queries.sql`.
+### 6. Find Students Whose Enrollment Grade Exceeds the Overall Average
 
-## Validation and limitations
+This query uses a subquery without a `JOIN`, as required by the exercise.
 
-The scripts were reviewed for T-SQL consistency, balanced delimiters, statement ordering, explicit insert columns, key relationships, and preservation of all ten original query objectives. The local environment provides the `sqlcmd` client, but no SQL Server service or connection was available for a live execution test. Therefore, this project does not claim a completed database execution test. Validation should be repeated against the target SQL Server instance.
+```sql
+SELECT FirstName, LastName, GPA
+FROM Students
+WHERE StudentID IN (
+    SELECT StudentID
+    FROM Enrollments
+    WHERE Grade > (
+        SELECT AVG(Grade)
+        FROM Enrollments
+    )
+);
+```
 
-This is intentionally a compact learning schema. It does not add separate `Courses`, `Semesters`, users, authentication, stored procedures, views, indexes, or application code because those features were not part of the source exercise.
+The project also includes queries for students living in Cairo or Giza who are older than 20, the top three students by GPA, distinct cities in alphabetical order, and students whose GPA exceeds the average GPA of students living in Cairo.
 
-## Screenshot
+![SQL Query Examples and Showcase](images/exercise-2-showcase.png)
 
-A placeholder is provided at [`docs/screenshot-placeholder.md`](docs/screenshot-placeholder.md). No image has been added yet.
+## How to Run the Project
+
+### Requirements
+
+- Microsoft SQL Server
+- SQL Server Management Studio (SSMS), or another compatible SQL Server client
+
+### Steps
+
+1. Clone or download this repository.
+2. Open the SQL script in your SQL Server client.
+3. Review the script before executing it.
+4. Execute the database creation and table setup statements.
+5. Insert the sample data.
+6. Run the queries to explore the results.
+
+**Note:** The script uses SQL Server-specific syntax, including `GO` and `TOP`. It is intended for Microsoft SQL Server and may require modifications to run on other database systems.
+
+If the database or tables already exist, review the creation statements before rerunning the script to avoid object-exists or duplicate-data errors.
+
+## Repository Structure
+
+```text
+online-course-system-sql/
+├── images/
+│   ├── exercise-2-banner.png
+│   ├── exercise-2-workflow.png
+│   ├── exercise-2-concepts.png
+│   └── exercise-2-showcase.png
+├── Exercise 2.sql
+└── README.md
+```
+
+The filenames shown above should match the files uploaded to GitHub. If the SQL script has a different filename in the repository, update the structure accordingly.
+
+## Learning Outcomes
+
+Through this exercise, I practiced:
+
+- Designing a relational database with related tables.
+- Defining primary and foreign key relationships.
+- Writing SQL queries to retrieve and filter records.
+- Applying aggregate functions to student and course data.
+- Grouping records and filtering grouped results.
+- Using subqueries to answer data-analysis questions.
+
+## Technologies
+
+- **Database:** Microsoft SQL Server
+- **Query Language:** T-SQL
+- **Tools:** SQL Server Management Studio (SSMS) or a compatible SQL Server client
+
+---
+
+*This project is part of my ongoing practice in SQL, relational database design, and data querying.*
