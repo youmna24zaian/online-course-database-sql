@@ -1,0 +1,27 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.bak
+*.log
+
+# SQL Server and local database artifacts
+*.mdf
+*.ndf
+*.ldf
+
+# Generated reports and screenshots
+*.png
+*.jpg
+*.jpeg
+*.gif
